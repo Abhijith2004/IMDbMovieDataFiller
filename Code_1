@@ -1,0 +1,68 @@
+from imdb import IMDb
+import pandas as pd
+
+file_path = 'path_to_file' #ensure that the file you are accessing is saved as .csv UTF-8 format in excel.
+df = pd.read_csv(file_path, encoding='ISO-8859-1')
+print("Initial DataFrame:")
+print(df.head())
+
+#instance
+ia = IMDb()
+
+#defining function for duration
+def get_imdb_runtime(movie_name,year1):
+    year=year1
+    try:
+        search_results = ia.search_movie(movie_name)
+        movie_year=search_results.get('year')
+        if search_results:
+            for items in search_results:
+                movie_year=search_results.get('year') # to search by filtering with respect to the year in which the movie was released. Can also filter with language of film. Check code_2 for the code
+                if movie_year == year:
+                    print("nice")
+                    movie = ia.get_movie(search_results[0].movieID)
+                    return movie.get('runtime')
+    except Exception as e:
+        print(f"Error fetching runtime for {movie_name}: {e}")
+    return None
+
+#defining function for rating
+def get_imdb_rating(movie_name,year1):
+    year=year1
+    try:
+        search_results = ia.search_movie(movie_name)
+        movie_year=search_results.get('year')
+        if search_results:
+            for items in search_results:  
+                if movie_year== year: 
+                    print("nice")
+                    movie = ia.get_movie(search_results[0].movieID)
+                    return movie.get('rating')
+    except Exception as e:
+        print(f"Error fetching ratings for {movie_name}: {e}")
+    return None
+
+# Create an empty list to store IMDb ratings
+imdb_runtime = []
+imdb_rating=[]
+
+# Iterate over each row in the DataFrame
+for index, row in df.iterrows():
+    movie_name = row['Film']
+    year=row['Year']
+    runtime = get_imdb_runtime(movie_name,year1)
+    imdb_runtime.append(runtime)
+    ratings=get_imdb_rating(movie_name,year1)
+    imdb_rating.append()
+
+# Add the IMDb ratings to a new column in the DataFrame
+df['IMDb Duration_2'] = imdb_runtime
+df['IMDb Rating']=imdb_rating
+
+# Save the updated DataFrame to a new CSV file
+output_file_path = 'path_to_new_location'
+df.to_csv(output_file_path, index=False)
+
+# Print the updated DataFrame
+print("Updated DataFrame with IMDb Ratings:")
+print(df.head())
