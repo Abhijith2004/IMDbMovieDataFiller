@@ -1,0 +1,23 @@
+import pandas as pd
+import re
+
+file_path = 'path_to_file'
+df = pd.read_csv(file_path)
+def extract_numbers(duration):
+    try:       
+        numbers = re.findall(r'\d+', duration)
+        print("working")
+        return ''.join(numbers)
+    except Exception as e:
+        print(f'error fetching for with error code:{e}')
+        return None 
+value=[]
+for index, row in df.iterrows():
+    duration=row['Coloumn name of the duration coloumn']
+    numbers_only = extract_numbers(duration)
+    value.append(numbers_only)
+df['Coloumn name of the duration coloumn']=value
+
+
+
+df.to_csv('path_to_final_file_location', index=False)
