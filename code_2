@@ -1,0 +1,24 @@
+import pandas as pd
+import imdb 
+ia=imdb.IMDb()
+
+def movie_language(movie_name):
+    try:
+        search=ia.search_movie(movie_name)
+        if search:
+            for movies in search:
+                code=movies.movieID
+                info=ia.get_movie(code)
+                language=info.data['languages']
+                if language==['Malayalam']:
+                    rate=info.data['rating']
+                    run=info.data['runtimes']
+                    print(f"IMDB Rating= {rate}")
+                    print(f"IMDB Rating={run}")
+                    print(language)
+                    break
+    except:
+        return None
+        
+
+movie_language("Joji") 
